@@ -1,9 +1,8 @@
 import express from "express";
+import { create } from "../controller/userController.js";
 
 const userRouter = express.Router();
 
-userRouter.get('/', (req, res) => {
-    res.send('User Route')
-})
+userRouter.post('/create', create)
 
 export default userRouter
