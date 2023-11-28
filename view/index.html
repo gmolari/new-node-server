@@ -4,12 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign Up</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <h2>SIGN UP</h2>
-    <form action="/api/user/create" method="POST">
+    <form class="form" id="form" action="/api/user/create" method="POST">
         <label for="name">Name:</label>
         <input name="name" id="name" type="text">
+        <label for="email">Email:</label>
+        <input name="email" id="email" type="text">
+        <label for="pass">Password:</label>
+        <input name="pass" id="pass" type="password">
+        <input type="submit" value="Submit">
+    </form>
+    <h2>Login</h2>
+    <form class="form" id="form" action="/api/user/login" method="POST">
         <label for="email">Email:</label>
         <input name="email" id="email" type="text">
         <label for="pass">Password:</label>
