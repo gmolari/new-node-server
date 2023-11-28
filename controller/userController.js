@@ -1,22 +1,19 @@
 import User from "../model/User.js"
 import bcrypt from "bcrypt"
-import EmailUsedError from "../exceptions/EmailUsedError.js"
+import EmailUsedError from "../errors/EmailUsedError.js"
+import FieldDoesntExist from "../errors/FieldDoesntExist.js"
+import InternalError from "../errors/InternalError.js"
 
 async function create(req, res) {
     try {
         // valores enviados para o cadastro
         const {name, email, pass} = req.body
 
-        // novo usuário sendo definido de qualquer forma
-        let newUser = null
+        let newUser
 
         // checando se alguma informação é nula ou não existe
         if (!name || !email || !pass){
-            res.status(400).send({
-                status: 400,
-                message: "Some field doesn't exists"
-            })
-            return
+            throw new FieldDoesntExist("Some field doesn't exist", 400)
         }
 
         const saltRounds = process.env.SALT
@@ -28,11 +25,10 @@ async function create(req, res) {
             newUser = await User.create({name, email, password: hashPass})
         } catch (error) {
             // houver erro e for referente a unico email
-            console.log(error)
             if (error.name == "SequelizeUniqueConstraintError") {
                 throw new EmailUsedError("This email has been used", 404)
             }else {
-                throw new Error('Unable to create the user, a error has ocurred')
+                throw new InternalError('Unable to create the user, a error has ocurred', 500)
             }
         }
 
@@ -46,20 +42,19 @@ async function create(req, res) {
 
     } catch (error) {
         // qualquer outro erro não tratado
-        console.log(error.name)
-        res.status(400).send({
-            status: 400,
-            message: "Unable to create the user, a error has ocurred"
+        res.status(error.status || 400).send({
+            status: error.status || 400,
+            message: error.message
         })
     }
 }
 
 async function login(req, res) {
     try {
-        const {email} = req.body.email
+        const {email, pass} = req.body.email
 
-        if (!email) {
-            throw Error('We need an email...')
+        if (!email || !pass) {
+            throw FieldDoesntExist("Some field doesn't exist")
         }
 
         const cUser = User.findOne({where: {email}})
