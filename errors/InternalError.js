@@ -1,10 +1,10 @@
 class InternalError extends Error {
     status
 
-    constructor(message, status){
+    constructor(message){
         super(message)
         this.name = "InternalError"
-        this.status = status
+        this.status = 500
     }
 }
 

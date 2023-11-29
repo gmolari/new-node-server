@@ -1,10 +1,10 @@
 class DataNotFinded extends Error {
     status
 
-    constructor(message, status){
+    constructor(message){
         super(message)
         this.name = "DataNotFinded"
-        this.status = status
+        this.status = 404
     }
 }
 

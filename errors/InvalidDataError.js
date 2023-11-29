@@ -1,10 +1,10 @@
 class InvalidDataError extends Error {
     status
 
-    constructor(message, status){
+    constructor(message){
         super(message)
         this.name = "InvalidDataError"
-        this.status = status
+        this.status = 400
     }
 }
 

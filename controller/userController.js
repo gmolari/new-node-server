@@ -3,8 +3,9 @@ import bcrypt from "bcrypt"
 import EmailUsedError from "../errors/EmailUsedError.js"
 import FieldDoesntExist from "../errors/FieldDoesntExist.js"
 import InternalError from "../errors/InternalError.js"
-import UserNotFindError from "../errors/DataNotFindedError.js"
+import DataNotFindedError from "../errors/DataNotFindedError.js"
 import InvalidDataError from "../errors/InvalidDataError.js"
+import { createToken } from "../config/jwt.js"
 
 async function create(req, res) {
     try {
@@ -29,9 +30,9 @@ async function create(req, res) {
         } catch (error) {
             // houver erro e for referente a unico email
             if (error.name == "SequelizeUniqueConstraintError") {
-                throw new EmailUsedError("This email has been used", 409)
+                throw new EmailUsedError("This email has been used")
             }else {
-                throw new InternalError('Unable to create the user, a error has ocurred', 500)
+                throw new InternalError('Unable to create the user, a error has ocurred')
             }
         }
 
@@ -57,7 +58,7 @@ async function login(req, res) {
         const {email, pass} = req.body
 
         if (!email || !pass) {
-            throw new FieldDoesntExist("Some field doesn't exist", 400)
+            throw new FieldDoesntExist("Some field doesn't exist")
         }
 
         let cUser = null
@@ -68,13 +69,15 @@ async function login(req, res) {
             throw error
         }
 
-        if (!cUser) throw new UserNotFindError("Cannot find user by this email", 404)
+        if (!cUser) throw new DataNotFindedError("Cannot find user by this email")
 
         const checkPass = bcrypt.compareSync(pass, cUser.password)
 
         if (!checkPass) throw new InvalidDataError("Email or password don't match")
 
-        res.status(200).send(cUser)
+        const token = createToken({id: cUser.id})
+
+        res.status(200).send({message: "Success, logged in!", token})
     } catch (error) {
         res.status(error.status || 400).send({
             status: error.status || 400,

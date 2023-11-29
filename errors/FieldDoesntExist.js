@@ -1,10 +1,10 @@
 class FieldDoesntExist extends Error {
     status
 
-    constructor(message, status){
+    constructor(message){
         super(message)
         this.name = "FieldDoesntExist"
-        this.status = status
+        this.status = 400
     }
 }
 
