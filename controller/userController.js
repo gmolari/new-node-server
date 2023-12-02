@@ -63,11 +63,7 @@ async function login(req, res) {
 
         let cUser = null
 
-        try {
-            cUser = await User.findOne({where: {email: email}})
-        } catch (error) {
-            throw error
-        }
+        cUser = await User.findOne({where: {email: email}})
 
         if (!cUser) throw new DataNotFindedError("Cannot find user by this email")
 
@@ -77,7 +73,28 @@ async function login(req, res) {
 
         const token = createToken({id: cUser.id})
 
-        res.status(200).send({message: "Success, logged in!", token})
+        res.redirect(301, `/home.html?id=${token}`)
+    } catch (error) {
+        res.status(error.status || 400).send({
+            status: error.status || 400,
+            message: error.message
+        })
+    }
+}
+
+async function get(req, res) {
+    try {
+        const id = res.locals.thisUser
+
+        if (!id) throw new FieldDoesntExist("Don't have way to find the user")
+
+        let cUser = null
+
+        cUser = await User.findByPk(id)
+
+        if (!cUser) throw new DataNotFindedError("Can't find any user by this data")
+
+        res.status(200).send({cUser})
     } catch (error) {
         res.status(error.status || 400).send({
             status: error.status || 400,
@@ -88,5 +105,6 @@ async function login(req, res) {
 
 export {
     create,
-    login
+    login,
+    get
 }

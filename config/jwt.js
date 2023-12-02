@@ -7,13 +7,16 @@ config()
 
 function verifyToken(req, res, next) {
     try {
-        const {token} = req.headers.authorization
+        const {token} = req.params.id
 
-        if (!token) throw new NoTokenError("Can't find token", 403)
+        console.log(req.params)
+
+        if (!token) throw new NoTokenError("Can't find token")
 
         jwt.verify(token, process.env.HASH, (err, data) => {
             if (err) throw new InvalidTokenError("Permission denied")
             else {
+                res.locals.thisUser = data.id
                 next()
             }
         })

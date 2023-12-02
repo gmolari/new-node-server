@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Home</h1>
+    <script>
+        (async () => {
+            const params = new URLSearchParams(window.location.search)
+            const id = params.get('id')
+            const data = await fetch('/api/user/get/'+id)
+            console.log("teste",data)
+        })()
+    </script>
+</body>
+</html>

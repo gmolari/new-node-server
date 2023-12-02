@@ -4,7 +4,7 @@ class NoTokenError extends Error {
     constructor(message){
         super(message)
         this.name = "NoTokenError"
-        this.status = 403
+        this.status = 401
     }
 }
 
