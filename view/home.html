@@ -11,9 +11,11 @@
     <script>
         (async () => {
             const params = new URLSearchParams(window.location.search)
-            const id = params.get('id')
-            const data = await fetch('/api/user/get/'+id)
-            console.log("teste",data)
+            const token = params.get('id')
+            const data = await fetch('/api/user/get/'+token)
+            const {id, name} = await data.json()
+
+            document.body.innerHTML= `<h1> Olá, ${name}, que tem o ID: ${id}`
         })()
     </script>
 </body>

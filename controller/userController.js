@@ -94,7 +94,7 @@ async function get(req, res) {
 
         if (!cUser) throw new DataNotFindedError("Can't find any user by this data")
 
-        res.status(200).send({cUser})
+        res.status(200).send({id: cUser.id, name: cUser.name})
     } catch (error) {
         res.status(error.status || 400).send({
             status: error.status || 400,

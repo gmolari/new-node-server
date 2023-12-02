@@ -7,9 +7,7 @@ config()
 
 function verifyToken(req, res, next) {
     try {
-        const {token} = req.params.id
-
-        console.log(req.params)
+        const token = req.params.id
 
         if (!token) throw new NoTokenError("Can't find token")
 
